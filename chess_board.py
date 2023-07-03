@@ -160,10 +160,10 @@ class boardView(tk.Frame):
         self.board[int(route[1])-1][d[route[0]]] = ""
        
         self.board[int(route[3])-1][d[route[2]]]=figura
-        if (self.selected_piece=="wk" and int(route[1])-1==3 and int(route[3])-1==1):
+        if (figura=="wk" and d[route[0]]==3 and d[route[2]]==1):
                 self.board[0][2]="wr"
                 self.board[0][0]=""
-        if (self.selected_piece=="wk" and int(route[1])-1==3 and int(route[3])-1==5):
+        if (figura=="wk" and d[route[0]]==3 and d[route[2]]==5):
                 self.board[0][4]="wr"
                 self.board[0][7]=""
         self.update_board()
