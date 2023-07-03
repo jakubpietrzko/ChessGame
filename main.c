@@ -19,7 +19,7 @@ void reverseMove(int startRow, int startCol, int endRow, int endCol, char* move)
     move[3] = '1' + endRow;
     move[4] = '\0';
 }
-int czy_szachowane(char plansza[8][8], int x,int y,int tryb)
+int czy_szachowane(char plansza[8][8], int y,int x,int tryb)
 {
     if(!tryb)
     {
@@ -493,7 +493,7 @@ double najlepszy_ruch(char plansza[8][8],int tryb,int *x, int *y,int *o,int *k,i
                     if(plansza[px][py]==6 && rk==1 && (rlwk||rpwk) && px==3 && py==0)
                     {
 
-                        if(rpwk && plansza[4][0]==12 &&plansza[5][0]==12 && plansza[6][0]==12 && czy_szachowane(plansza,px,py,tryb) && czy_szachowane(plansza,4,0,tryb) && czy_szachowane(plansza,5,0,tryb))
+                        if(rpwk && plansza[4][0]==12 &&plansza[5][0]==12 && plansza[6][0]==12 && czy_szachowane(plansza,3,0,tryb) && czy_szachowane(plansza,4,0,tryb) && czy_szachowane(plansza,5,0,tryb))
                         {
                             plansza[3][0]=12;
                             plansza[7][0]=12;
@@ -524,7 +524,7 @@ double najlepszy_ruch(char plansza[8][8],int tryb,int *x, int *y,int *o,int *k,i
 
 
                         }
-                        if(rlwk && plansza[2][0]==12 &&plansza[1][0]==12  && czy_szachowane(plansza,px,py,tryb) && czy_szachowane(plansza,2,0,tryb) && czy_szachowane(plansza,1,0,tryb))
+                        if(rlwk && plansza[2][0]==12 &&plansza[1][0]==12  && czy_szachowane(plansza,3,0,tryb) && czy_szachowane(plansza,2,0,tryb) && czy_szachowane(plansza,1,0,tryb))
                         {
                             plansza[3][0]=12;
                             plansza[0][0]=12;
@@ -650,7 +650,7 @@ double najlepszy_ruch(char plansza[8][8],int tryb,int *x, int *y,int *o,int *k,i
                 {
                     if(plansza[px][py]==0 && rg==1 && (rlwg||rpwg) && px==3 && py==7)
                     {
-                        if(rpwg && plansza[4][7]==12 && plansza[5][7]==12 && plansza[6][7]==12 && czy_szachowane(plansza,px,py,tryb) && czy_szachowane(plansza,4,7,tryb) && czy_szachowane(plansza,5,7,tryb))
+                        if(rpwg && plansza[4][7]==12 && plansza[5][7]==12 && plansza[6][7]==12 && czy_szachowane(plansza,3,7,tryb) && czy_szachowane(plansza,4,7,tryb) && czy_szachowane(plansza,5,7,tryb))
                         {
                             plansza[3][7]=12;
                             plansza[7][7]=12;
@@ -683,7 +683,7 @@ double najlepszy_ruch(char plansza[8][8],int tryb,int *x, int *y,int *o,int *k,i
 
 
                         }
-                        if(rlwg && plansza[2][7]==12 &&plansza[1][7]==12  && czy_szachowane(plansza,px,py,tryb) && czy_szachowane(plansza,2,7,tryb) && czy_szachowane(plansza,1,7,tryb))
+                        if(rlwg && plansza[2][7]==12 &&plansza[1][7]==12  && czy_szachowane(plansza,3,7,tryb) && czy_szachowane(plansza,2,7,tryb) && czy_szachowane(plansza,1,7,tryb))
                         {
                             plansza[3][7]=12;
                             plansza[7][7]=12;
@@ -951,4 +951,3 @@ while(r<140)
 }
 
 }
-
