@@ -261,7 +261,7 @@ int depth(char plansza[8][8],int r)
 {
     long long int Wk=0,Hk=0,Sk=0,Gk=0,Kk=0,Pk=0,W=0,H=0,S=0,G=0,K=0,P=0;
     if(r<20)
-    {return 4;}
+    {return 6;}
     for(int i=0;i<8;i++)
     {
         for(int j=0;j<8;j++)
@@ -309,7 +309,7 @@ int depth(char plansza[8][8],int r)
     }
     long long int fk=((Wk+Gk)*4*8)+(Sk*8)+8*Kk+(Pk*3*2)+(Hk*8*8);
     long long int fg=((W+G)*4*8)+(S*8)+K*8+(P*3*2)+(H*8*8);
-        if(r>60 || fk*fg*fk*fg*fk*fg<3*pow(10,10))
+        if(r>60 || fk*fg*fk*fg*fk*fg*fk*fg<3*pow(10,10))
         {
 
             printf("g8\n");
@@ -834,7 +834,7 @@ while(r<140)
     {
         plansza[x+dx][y+dy]=7;
     }}r++;
-    printf("ruch komputera!");
+    printf("ruch komputera!\n");
     wypisz(plansza);
   //  czy= najlepszy_ruch(plansza,2,&x,&y,&o,&k,r);
    // if(czy>=WYGRANA)
@@ -843,13 +843,18 @@ while(r<140)
     printf("twoj ruch!");
     scanf("%d%d%d%d",&x,&y,&x2,&y2);
     plansza[x2][y2]=plansza[x][y];
+  
     if(x==3 && y==7 && x2==5 && y2==7 && rg)
     {
-        plansza[4][7]==2;
+        plansza[4][7]=2;
+        plansza[7][7]=PUSTE;
+        rg=0;
     }
     if(x==3 && y==7 && x2==1 && y2==7 && rg)
     {
-        plansza[2][7]==2;
+        plansza[2][7]=2;
+        plansza[0][7]=PUSTE;
+        rg=0;
     }
     plansza[x][y]=PUSTE;
     if(plansza[3][7]==12)
