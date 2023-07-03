@@ -1,2 +1,2 @@
 # ChessGame
-Prosty program realizujący grę w szachy z komputerem. Projekt GUI napisany jest w Pythonie, jednak wykorzystuje autorski silnik szachowy napisany w C implementujący algorytm min-max. Obecnie jest niedokończony.
+Prosty program realizujący grę w szachy z komputerem. Projekt GUI napisany jest w Pythonie, jednak wykorzystuje autorski silnik szachowy napisany w C implementujący algorytm min-max. Obecnie zaimplementowane tryby to tryb gry z komputerem i z drugim graczem lokalnie. Na ten moment o ile silnik w c obsluguje zdarzenia typu roszada to jeszcze nie zostało to zaimplementowane w GUI, co może powodować błędy.Projekt niedokończony.
