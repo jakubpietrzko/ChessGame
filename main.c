@@ -1,9 +1,24 @@
 #include <stdio.h>
 #include <math.h>
+#include <time.h>
 #define PRZEGRANA -10000
 #define WYGRANA 10000
 #define PUSTE 12
 
+// Funkcja zamieniająca notację literowo-cyfrową na indeksy w tablicy
+void parseMove(const char* move, int* fromRow, int* fromCol, int* toRow, int* toCol) {
+    *fromRow = move[1] - '1';
+    *fromCol = move[0] -'a';
+    *toRow = move[3] - '1';
+    *toCol = move[2] -'a';
+}
+void reverseMove(int startRow, int startCol, int endRow, int endCol, char* move) {
+    move[0] = 'h' - startCol;
+    move[1] = '1' + startRow;
+    move[2] = 'h' - endCol;
+    move[3] = '1' + endRow;
+    move[4] = '\0';
+}
 int czy_szachowane(char plansza[8][8], int x,int y,int tryb)
 {
     if(!tryb)
@@ -219,49 +234,69 @@ int MAX_KIER[]={8,8,4,4,8,3,8,8,4,4,8,3,0};
 int MAX_ODL[]={2,8,8,8,2,2,2,8,8,8,2,2,0};
 int WX[12][8]={{0,1,1,1,0,-1,-1,-1},{0,1,1,1,0,-1,-1,-1},{0,1,0,-1},{1,1,-1,-1},{1,2,2,1,-1,-2,-2,-1},{-1,0,1},{0,1,1,1,0,-1,-1,-1},{0,1,1,1,0,-1,-1,-1},{0,1,0,-1},{1,1,-1,-1},{1,2,2,1,-1,-2,-2,-1},{-1,0,1} };
 int WY[12][8]={{-1,-1,0,1,1,1,0,-1},{-1,-1,0,1,1,1,0,-1},{-1,0,1,0},{-1,1,1,-1},{-2,-1,1,2,2,1,-1,-2},{-1,-1,-1},{-1,-1,0,1,1,1,0,-1},{-1,-1,0,1,1,1,0,-1},{-1,0,1,0},{-1,1,1,-1},{-2,-1,1,2,2,1,-1,-2},{1,1,1} };
-void ruch2(char plansza[8][8])
+void ruch2(char plansza[8][8], char move[5])
 {
     if(plansza[2][5]==4)
     {
         plansza[3][3]=12;
         plansza[3][4]=11;
+        reverseMove(3,3,4,3,move);
+        printf("%s\n", move);
+        fflush(stdout);
+        
     }
     else if(plansza[2][4]==5)
     {
         plansza[3][3]=12;
         plansza[2][4]=11;
+        reverseMove(3,3,4,2,move);
+        printf("%s\n", move);
+        fflush(stdout);
     }
     else if(plansza[3][4]==5 || plansza[5][4]==5 || plansza[7][5]==4)
     {
         plansza[2][2]=plansza[1][0];
         plansza[1][0]=12;
+        reverseMove(0,1,2,2,move);
+        printf("%s\n", move);
+        fflush(stdout);
     }
     else if(plansza[4][4]==5)
     {
         plansza[4][4]=plansza[3][3];
         plansza[3][3]=12;
+        reverseMove(3,3,4,4,move);
+        printf("%s\n", move);
+        fflush(stdout);
     }
 
     else if(plansza[6][4]==5)
     {
         plansza[6][4]=plansza[2][0];
         plansza[2][0]=12;
+        reverseMove(0,2,4,6,move);
+        printf("%s\n", move);
+        fflush(stdout);
     }
 
     else
     {
         plansza[4][3]=plansza[4][1];
         plansza[4][1]=12;
+        reverseMove(1,4,3,4,move);
+        printf("%s\n", move);
+        fflush(stdout);
+
     }
 }
 //przyjmujÄc: 0-krĂłl, 1-hetman, 2-wieĹźa, 3-goniec, 4-skoczek,
 //5-pionek, 6-krĂłl_k, 7-hetman_k, 8-wieĹźa_k, 9-goniec_k,
 //10-skoczek_k, 11-pionek_k, 12-pole puste
-int depth(char plansza[8][8],int r)
+// w komentarzu bo po obliczeniach okazalo sie ze ma sens tylko w koncowkach a nawet tam istnialo ryzyko dorobienia hetmana ktory ogl znacznie zwiekszyc liczbe obliczen i czas oczekwianai na odpowiedz
+/*int depth(char plansza[8][8],int r)
 {
     long long int Wk=0,Hk=0,Sk=0,Gk=0,Kk=0,Pk=0,W=0,H=0,S=0,G=0,K=0,P=0;
-    if(r<20)
-    {return 6;}
+    
     for(int i=0;i<8;i++)
     {
         for(int j=0;j<8;j++)
@@ -307,16 +342,18 @@ int depth(char plansza[8][8],int r)
         }
 
     }
-    long long int fk=((Wk+Gk)*4*8)+(Sk*8)+8*Kk+(Pk*3*2)+(Hk*8*8);
-    long long int fg=((W+G)*4*8)+(S*8)+K*8+(P*3*2)+(H*8*8);
-        if(r>60 || fk*fg*fk*fg*fk*fg*fk*fg<3*pow(10,10))
+    //528 to liczba wieksza niz maksymalna liczba przzeszukiwanych opcji i skoro przeszukiwanie nieco mniej niz 528^6  to okolo 3,8 sekundy to 115^8 jest podobnego rzedu liczba wiec mozna by bylo zejsc teoretycznie do 8 poziomu przeszukiwan przy koncowkach gdy zostaje malo figur, funkcja w komentarzu jednak bo zagrozeniem jest dorobienie hetmana ktore nagle zwiekszy liczbe przeszukiwan az o 64  co w przypadku naglego hetmana moglo by doprowadzic do najgorszego przypadku czyli wydluzenia czasu 4 sekund do prawie 400, agdyby ktos zartowal a w przypadku obustornnego dorabiania po 2 hetmany  
+   long long int fk=((Wk+Gk)*4*8)+(Sk*8)+8*Kk+(8*Pk*3*2)+(Hk*8*8);
+    long long int fg=((W+G)*4*8)+(S*8)+K*8+(8*P*3*2)+(H*8*8);
+        if( fk+fg<115) 
         {
 
             printf("g8\n");
             return 8;
         }
+     
     return 6;
-}
+}*/
 double ocena(char plansza[8][8],int r,int rks)
 {
     double wynik=0;
@@ -335,11 +372,11 @@ double ocena(char plansza[8][8],int r,int rks)
     }
     if((r<16 && plansza[0][0]==8)|| rks==1)
     {
-        wynik+=0.1;
+        wynik+=0.01;
     }
     if((r<16 && plansza[7][0]==8) || rks==1)
     {
-        wynik+=0.1;
+        wynik+=0.01;
     }
     if(plansza[6][0]!=10 && plansza[7][2]!=10)
     {
@@ -413,22 +450,22 @@ void wypisz(char plansza[8][8])
                 printf(" p  ");
             }
             if(plansza[j][i]==6){
-                printf(" Kk ");
+                printf(" Kb ");
             }
             if(plansza[j][i]==7){
-                printf(" Hk ");
+                printf(" Hb ");
             }
             if(plansza[j][i]==8){
-                printf(" wk ");
+                printf(" Wb ");
             }
             if(plansza[j][i]==9){
-                printf(" gk ");
+                printf(" Gb ");
             }
             if(plansza[j][i]==10){
-                printf(" sk ");
+                printf(" Sb ");
             }
             if(plansza[j][i]==11){
-                printf(" pk ");
+                printf(" pb ");
             }
 
         }
@@ -784,19 +821,37 @@ char plansza[8][8]={8,11,12,12,12,12,5,2,
                         9,11,12,12,12,12,5,3,
                         10,11,12,12,12,12,12,4,
                         8,11,12,12,12,12,5,2,};*/
-    wypisz(plansza);
-   printf( "czesc! grasz poprzez wpisywanie najpierw numeru kolumny i wiersza na ktorych twoj pionek obecnie stoi,\n a pozniej w ten sam sposob na jakie pole ma sie przeniesc \n(numeracja od 0-7,ruch e5 to przykladowo:3 [enter] 6[enter] 3[enter] 4 [enter]\n");
+   // wypisz(plansza);
+ //  printf( "czesc! grasz czarnymi poprzez wpisywanie ruchow np e7e5\n");
     int x,y,o,k,dx,dy,x2,y2,czy,rk=1,rg=1,rlwg=1,rpwg=1,rlwk=1,rpwk=1,rks=0;
 int r=1;
+   
+    
+ 
 while(r<140)
-{   if(r==1)
-    {plansza[3][3]=11; plansza[3][1]=12;}
+{  char move[5];
+     if(r==1)
+    {plansza[3][3]=11; plansza[3][1]=12;
+        reverseMove(1,3,3,3,move);
+        printf("%s\n", move);
+        fflush(stdout);
+    }
     else if(r==2)
     {
-        ruch2(plansza);
+        ruch2(plansza, move);
     }
     else{
-        najlepszy_ruch(plansza, depth(plansza,r),&x,&y,&o,&k,r,-2000,rk,rg,rpwg,rlwg,rlwk,rpwk,rks);
+         // clock_t start, end;
+    //double czas_trwania;
+
+    //start = clock();
+        
+        najlepszy_ruch(plansza, 4,&x,&y,&o,&k,r,-2000,rk,rg,rpwg,rlwg,rlwk,rpwk,rks);
+        
+    //end = clock();
+    //czas_trwania = ((double) (end - start)) / CLOCKS_PER_SEC;
+
+    //printf("Czas trwania: %f sekund\n", czas_trwania);
     dx=o*WX[plansza[x][y]][k];
     dy=o*WY[plansza[x][y]][k];
         plansza[x + dx][y + dy] = plansza[x][y];
@@ -833,17 +888,30 @@ while(r<140)
     if(plansza[x+dx][y+dy]==11 && y+dy==7)
     {
         plansza[x+dx][y+dy]=7;
-    }}r++;
-    printf("ruch komputera!\n");
-    wypisz(plansza);
+    }
+    reverseMove(y,x,y+dy,x+dx,move);
+    printf("%s\n", move);
+    fflush(stdout);
+    
+    
+    }r++;
+  //  printf("ruch komputera!\n");
+   // wypisz(plansza);
   //  czy= najlepszy_ruch(plansza,2,&x,&y,&o,&k,r);
    // if(czy>=WYGRANA)
    // { printf("przzegrales");
     //    /*return 1;*/}
-    printf("twoj ruch!");
-    scanf("%d%d%d%d",&x,&y,&x2,&y2);
+    
+    //printf("twoj ruch!");
+    
+    char move_g[5];
+    scanf("%s", move_g);  
+    parseMove(move_g, &y, &x, &y2, &x2);
+    x=7-x;
+    x2=7-x2;
+    //reverseMove(y,x,y2,x2,move_g);
+    //printf("%s",move_g);
     plansza[x2][y2]=plansza[x][y];
-  
     if(x==3 && y==7 && x2==5 && y2==7 && rg)
     {
         plansza[4][7]=2;
@@ -873,7 +941,7 @@ while(r<140)
     {
         plansza[x2][y2]=1;
     }
-    wypisz(plansza);
+    //wypisz(plansza);
   //  czy = najlepszy_ruch(plansza,2,&x,&y,&o,&k,r);
   //  if(czy<=PRZEGRANA)
     //{ printf("wygrales");
@@ -883,3 +951,4 @@ while(r<140)
 }
 
 }
+
