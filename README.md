@@ -1,2 +1,2 @@
-# ConsoleGameChess
-Prosty program realizujący grę w szachy z komputerem. Program został napisany w języku C i umożliwia rozgrywkę oraz wyświetlanie planszy w konsoli.
+# ChessGame
+Prosty program realizujący grę w szachy z komputerem. Projekt GUI napisany jest w Pythonie, jednak wykorzystuje autorski silnik szachowy napisany w C implementujący algorytm min-max. 
