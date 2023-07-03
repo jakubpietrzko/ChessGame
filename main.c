@@ -846,7 +846,7 @@ while(r<140)
 
     //start = clock();
         
-        najlepszy_ruch(plansza, 4,&x,&y,&o,&k,r,-2000,rk,rg,rpwg,rlwg,rlwk,rpwk,rks);
+        najlepszy_ruch(plansza, 6,&x,&y,&o,&k,r,-2000,rk,rg,rpwg,rlwg,rlwk,rpwk,rks);
         
     //end = clock();
     //czas_trwania = ((double) (end - start)) / CLOCKS_PER_SEC;
