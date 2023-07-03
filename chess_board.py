@@ -1,6 +1,9 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import subprocess
+import os
+import signal
+import subprocess
 class boardView(tk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
@@ -16,8 +19,16 @@ class boardView(tk.Frame):
         self.row_target=None
         self.col_target=None
         self.board= parent.board
-        self.engine = subprocess.Popen(["./chess"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        self.create_widgets(parent=parent)
+        try:
+            self.engine = subprocess.Popen(["./chess"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+            parent.protocol("WM_DELETE_WINDOW", self.on_close)
+            self.create_widgets(parent=parent)
+        except KeyboardInterrupt:
+            self.engine.kill()
+
+    def on_close(self):
+        self.engine.kill()
+        self.master.destroy()
     def create_widgets(self, parent):
         # Utworzenie planszy
         self.canvas = tk.Canvas(self, width=parent.board_size, height=parent.board_size)
@@ -102,8 +113,18 @@ class boardView(tk.Frame):
             
             self.board[self.initial_row][self.initial_col] = ""
 
-            
-
+            if (self.selected_piece=="bk" and self.initial_col==3 and self.col_target==1):
+                self.board[7][2]="br"
+                self.board[7][0]=""
+            if (self.selected_piece=="bk" and self.initial_col==3 and self.col_target==5):
+                self.board[7][4]="br"
+                self.board[7][7]=""
+            if (self.selected_piece=="wk" and self.initial_col==3 and self.col_target==1):
+                self.board[0][2]="wr"
+                self.board[0][0]=""
+            if (self.selected_piece=="wk" and self.initial_col==3 and self.col_target==5):
+                self.board[0][4]="wr"
+                self.board[0][7]=""
             # Zresetuj zmienną selected_piece
             self.selected_piece = None
             self.selected_piece_position = None
@@ -139,7 +160,12 @@ class boardView(tk.Frame):
         self.board[int(route[1])-1][d[route[0]]] = ""
        
         self.board[int(route[3])-1][d[route[2]]]=figura
-        
+        if (self.selected_piece=="wk" and int(route[1])-1==3 and int(route[3])-1==1):
+                self.board[0][2]="wr"
+                self.board[0][0]=""
+        if (self.selected_piece=="wk" and int(route[1])-1==3 and int(route[3])-1==5):
+                self.board[0][4]="wr"
+                self.board[0][7]=""
         self.update_board()
     
     def send_to_script(self):
@@ -148,3 +174,4 @@ class boardView(tk.Frame):
         return s
             
             
+
